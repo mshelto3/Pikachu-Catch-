@@ -19,35 +19,53 @@ public class HUD implements Disposable {
 
     private Integer timeCount;
 
-    Label countUp;
-    Label timeLabel;
+    private Viewport port;
+
+    private int pokeHit;
+    private int pokeMiss;
+
+    Label hitLabel;
+    Label missLabel;
 
     public HUD(SpriteBatch sb){
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Pokemon Hollow.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Pokemon Solid.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 10;
+        parameter.size = 20;
         BitmapFont font = generator.generateFont(parameter);
         generator.dispose();
 
-
         timeCount = 0;
 
-        OrthographicCamera cam = new OrthographicCamera();
-        cam.setToOrtho(false, 800, 480);
+        port = new FitViewport(800, 480, new OrthographicCamera());
+        stage = new Stage(port, sb);
 
         Table table = new Table();
         table.top();
         table.setFillParent(true);
 
-        timeLabel = new Label(String.format("%03d", timeCount), new Label.LabelStyle(font, Color.BLACK));
-        countUp = new Label("TIME", new Label.LabelStyle(font, Color.BLACK));
+        hitLabel = new Label(String.format("Hits: %d", pokeHit), new Label.LabelStyle(font, Color.WHITE));
+        missLabel = new Label(String.format("Miss: %d", pokeMiss), new Label.LabelStyle(font, Color.WHITE));
 
-        table.add(timeLabel).expandX().top().left();
+        table.add(hitLabel).expandX().top().left();
         table.row();
-        table.add(countUp).expandX().top().left();
+        table.add(missLabel).expandX().top().left();
 
         stage.addActor(table);
+    }
+
+    public void incrementHit(){
+        pokeHit++;
+        hitLabel.setText(String.format("Hits: %d", pokeHit));
+    }
+
+    public void incrementMiss(){
+        pokeMiss++;
+        missLabel.setText(String.format("Miss: %d", pokeMiss));
+    }
+
+    public int getMiss(){
+        return pokeMiss;
     }
 
     @Override
