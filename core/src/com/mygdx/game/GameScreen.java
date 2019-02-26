@@ -44,12 +44,13 @@ public class GameScreen implements Screen {
 
         cam = new OrthographicCamera();
         port = new FitViewport(800, 480, cam);
+        cam.position.set(port.getWorldWidth() / 2, port.getWorldHeight() / 2, 0);
 
         pikachu = new Rectangle();
         pikachu.x = 800 / 2 - 64 / 2; // center the bucket horizontally
         pikachu.y = 20; // bottom left corner of the bucket is 20 pixels above the bottom screen edge
-        pikachu.width = 64;
-        pikachu.height = 64;
+        pikachu.width = 50;
+        pikachu.height = 50;
 
         pokeballs = new Array<Rectangle>();
         spawnPokeball();
@@ -60,8 +61,8 @@ public class GameScreen implements Screen {
         Rectangle pokeball = new Rectangle();
         pokeball.x = MathUtils.random(0, 800-64);
         pokeball.y = 480;
-        pokeball.width = 64;
-        pokeball.height = 64;
+        pokeball.width =  25;
+        pokeball.height = 25;
         pokeballs.add(pokeball);
         lastBallDrop = TimeUtils.nanoTime();
     }
@@ -70,15 +71,16 @@ public class GameScreen implements Screen {
         if(Gdx.input.isTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            cam.unproject(touchPos);
             pikachu.x = touchPos.x - 64 / 2;
             if(pikachu.x < 0) pikachu.x = 0;
             else if(pikachu.x > 800 -64) pikachu.x = 800 - 64;
         }
-        if(TimeUtils.nanoTime() - lastBallDrop > 1000000000) spawnPokeball();
+        if(TimeUtils.nanoTime() - lastBallDrop > 500000000) spawnPokeball();
         for (Iterator<Rectangle> iter = pokeballs.iterator(); iter.hasNext(); ) {
             Rectangle raindrop = iter.next();
-            raindrop.y -= 100 * Gdx.graphics.getDeltaTime();
-            if(raindrop.y + 64 < 0){
+            raindrop.y -= 200 * Gdx.graphics.getDeltaTime();
+            if(raindrop.y + 64 < pikachu.y){
                 iter.remove();
                 hud.incrementMiss();
                 if(hud.getMiss() > 2){
@@ -94,9 +96,10 @@ public class GameScreen implements Screen {
     }
 
     public void render (float delta) {
-        gameLogic();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        cam.update();
+        game.batch.setProjectionMatrix(cam.combined);
         game.batch.begin();
         game.batch.draw(backGround, 0, 0);
         game.batch.draw(pikaImage, pikachu.x, pikachu.y);
@@ -106,6 +109,7 @@ public class GameScreen implements Screen {
         game.batch.end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+        gameLogic();
     }
 
     public void resize(int width, int height) {
@@ -134,6 +138,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        pokeMusic.dispose();
+        pikaImage.dispose();
+        pokeImage.dispose();
+        hud.dispose();
+        backGround.dispose();
     }
 }

@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -21,10 +22,13 @@ public class GameOver implements Screen {
     private Stage stage;
     Texture backGround2;
     TextureRegion backGround;
+    private Sound pikaSad;
 
     private MyGdxGame game;
 
     public GameOver(MyGdxGame game){
+        pikaSad = Gdx.audio.newSound(Gdx.files.internal("Pika Pika Tired.mp3"));
+        pikaSad.play();
         this.game = game;
         viewport = new FitViewport(800, 480, new OrthographicCamera());
         stage = new Stage(viewport, game.batch);
@@ -92,6 +96,8 @@ public class GameOver implements Screen {
 
     @Override
     public void dispose() {
-
+        stage.dispose();
+        backGround2.dispose();
+        pikaSad.dispose();
     }
 }
