@@ -20,13 +20,14 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class GameOver implements Screen {
     private Viewport viewport;
     private Stage stage;
-    Texture backGround2;
-    TextureRegion backGround;
+    private Texture backGround2;
+    private TextureRegion backGround;
     private Sound pikaSad;
+    private HUD hud;
 
     private MyGdxGame game;
 
-    public GameOver(MyGdxGame game){
+    public GameOver(MyGdxGame game, HUD hud){
         pikaSad = Gdx.audio.newSound(Gdx.files.internal("Pika Pika Tired.mp3"));
         pikaSad.play();
         this.game = game;
@@ -35,6 +36,8 @@ public class GameOver implements Screen {
 
         backGround2 = new Texture(Gdx.files.internal("crying.png"));
         backGround = new TextureRegion(backGround2, 0, 0, 1120, 700);
+
+        this.hud = hud;
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Pokemon Solid.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -72,6 +75,8 @@ public class GameOver implements Screen {
         game.batch.draw(backGround, 0, 0, 800, 480);
         game.batch.end();
         stage.draw();
+        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
     }
 
     @Override
@@ -99,5 +104,6 @@ public class GameOver implements Screen {
         stage.dispose();
         backGround2.dispose();
         pikaSad.dispose();
+        hud.dispose();
     }
 }

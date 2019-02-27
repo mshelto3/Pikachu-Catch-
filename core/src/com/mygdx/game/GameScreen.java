@@ -84,7 +84,7 @@ public class GameScreen implements Screen {
                 iter.remove();
                 hud.incrementMiss();
                 if(hud.getMiss() > 2){
-                    game.setScreen(new GameOver(game));
+                    game.setScreen(new GameOver(game, hud));
                     dispose();
                 }
             }
@@ -141,7 +141,6 @@ public class GameScreen implements Screen {
         pokeMusic.dispose();
         pikaImage.dispose();
         pokeImage.dispose();
-        hud.dispose();
         backGround.dispose();
     }
 }

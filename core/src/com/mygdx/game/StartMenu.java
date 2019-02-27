@@ -47,7 +47,7 @@ public class StartMenu implements Screen {
         table.setFillParent(true);
 
         Label gameOverLabel = new Label("Help Pikachu catch the Pokeballs!", new Label.LabelStyle(font, Color.BLACK));
-        Label playAgainLabel = new Label("Click to Play!", new Label.LabelStyle(font, Color.BLACK));
+        Label playAgainLabel = new Label("Click to Play! Don't miss 3!", new Label.LabelStyle(font, Color.BLACK));
 
         table.add(gameOverLabel).expandX();
         table.row();
